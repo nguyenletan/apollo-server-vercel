@@ -480,6 +480,8 @@ type Address {
   full: String
   street: String
   state: String
+  lat: Float
+  lng: Float
 }
 
 type Picture {

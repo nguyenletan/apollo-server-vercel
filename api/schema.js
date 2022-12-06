@@ -497,6 +497,7 @@ type Apartment {
   title: String
   pictures: [Picture]
   prices: Prices
+  Address: Address
 }
 
 type Query {

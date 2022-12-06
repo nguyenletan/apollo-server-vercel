@@ -39,7 +39,7 @@ export const resolvers = {
         hello: () => 'world',
         //apartments: () => apartmentsFromGuesty,
         apartments: async (_, {}, { dataSources }) => {
-            return dataSources.guestyAPI.getApartments(10);
+            return dataSources.guestyAPI.getApartments(12);
         },
     },
 };

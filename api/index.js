@@ -1,15 +1,15 @@
-import { ApolloServer, gql } from 'apollo-server-express'
-import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
-import http from 'http'
-import express from 'express'
-import cors from 'cors'
 
-const app = express()
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import express from 'express';
+import http from 'http';
+import cors from 'cors';
+import pkg from 'body-parser';
+const { json } = pkg;
+//import { typeDefs, resolvers } from './schema';
 
-app.use(cors())
-app.use(express.json())
 
-const httpServer = http.createServer(app)
 
 const apartmentsFromGuesty = [
   {
@@ -18,7 +18,7 @@ const apartmentsFromGuesty = [
   }
 ]
 
-const typeDefs = gql`
+const typeDefs = `#graphql
   type Apartment {
     id: String
     title: String
@@ -37,17 +37,22 @@ const resolvers = {
   },
 }
 
-const startApolloServer = async (app, httpServer) => {
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-  })
+const app = express();
+const httpServer = http.createServer(app);
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+});
+await server.start();
+app.use(
+  '/graphql',
+  cors(),
+  json(),
+  expressMiddleware(server, {
+    context: async ({ req }) => ({ token: req.headers.token }),
+  }),
+);
 
-  await server.start()
-  server.applyMiddleware({ app })
-}
-
-startApolloServer(app, httpServer)
 
 export default httpServer

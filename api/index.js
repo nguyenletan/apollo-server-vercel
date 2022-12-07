@@ -14,10 +14,7 @@ const httpServer = http.createServer(app);
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-  dataSources: {
-    guestyAPI: new  GuestyAPIDataSource(),
-  },
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
 });
 await server.start();
 app.use(

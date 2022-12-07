@@ -13,6 +13,18 @@ class GuestyAPIDataSource extends RESTDataSource {
         accept: 'application/json',
       },
     })
+    console.log(result)
+    return result.results
+  }
+
+  async getCities(limit = 100) {
+    const result = await this.get(`listings/cities?limit=${limit}`, {
+      headers: {
+        authorization: `Bearer ${this.token}`,
+        contentType: 'application/json',
+        accept: 'application/json',
+      },
+    })
     return result.results
   }
 
